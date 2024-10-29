@@ -1,25 +1,23 @@
 from pytube import YouTube
 
-def download_youtube_video():
-  
-    video_url = input("Video URL'sini girin: ")
-  
-    resolution = input("İstediğiniz çözünürlüğü girin (örneğin 1080p, 720p): ")
-    
+
+video_url = input("Video URL'sini girin: ")
+
+
+print("Seçenekler: \n1. 720p\n2. 480p\n3. 360p\n4. 240p\n5. 144p")
+quality = input("İndirmek istediğiniz kaliteyi seçin (ör. 720p): ")
+
+# YouTube videosunu indirme
+try:
     yt = YouTube(video_url)
     
-    stream = yt.streams.filter(res=resolution, file_extension="mp4").first()
-    
-    if stream is None:
-        print(f"{resolution} çözünürlüğünde bir video bulunamadı. Mevcut olan çözünürlükler:")
-        for stream in yt.streams.filter(file_extension="mp4"):
-            print(f"- {stream.resolution}")
-        return
-
-    print(f"Video Başlığı: {yt.title}")
-    print(f"Çözünürlük: {stream.resolution}")
-    
-    stream.download()
-    print("İndirme işlemi tamamlandı.")
-
-download_youtube_video()
+    # Belirtilen kaliteyi bul ve indir
+    video = yt.streams.filter(res=quality, file_extension='mp4').first()
+    if video:
+        print("İndirme başlıyor...")
+        video.download()
+        print("İndirme tamamlandı!")
+    else:
+        print(f"{quality} çözünürlüğünde video bulunamadı. Lütfen başka bir kalite seçin.")
+except Exception as e:
+    print("Bir hata oluştu:", e)
